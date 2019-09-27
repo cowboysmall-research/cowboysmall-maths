@@ -1,0 +1,7 @@
+#!/bin/bash
+
+find . -name \*.pyc -delete
+
+export PYTHONPATH=.
+
+python3 -m 'nose' tests/
