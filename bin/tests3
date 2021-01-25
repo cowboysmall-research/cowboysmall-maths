@@ -4,4 +4,4 @@ find . -name \*.pyc -delete
 
 export PYTHONPATH=.
 
-python3 -m 'nose' tests/
+python3 -m tests.test_plots
