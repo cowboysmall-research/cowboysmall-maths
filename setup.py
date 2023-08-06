@@ -12,7 +12,7 @@ setup(
     version='0.1.0',
     description='Mathematics',
     keywords='mathematics',
-    url='https://github.com/cowboysmall/mathematics',
+    url='https://github.com/cowboysmall-research/mathematics',
 
 
     author='Jerry Kiely',
