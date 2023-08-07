@@ -1,4 +1,4 @@
-# CowboySmall Maths
+# CowboySmall Mathematics
 
 <!-- 
 [![PyPI - Version](https://img.shields.io/pypi/v/cowboysmall-maths.svg)](https://pypi.org/project/cowboysmall-maths)
