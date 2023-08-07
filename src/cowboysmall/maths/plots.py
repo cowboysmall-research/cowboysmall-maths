@@ -4,10 +4,22 @@ import matplotlib.pyplot as plt
 
 from pylab import rcParams
 
+from typing import Tuple, Callable, TypeVar
+
 
 class Plot:
 
-    def __init__(self, title, labels, function, x_bounds = (-1, 1), y_bounds = (-1, 1), figsize = (12, 9), linewidth = 2):
+    def __init__(
+        self,
+        title: str,
+        labels: Tuple[str, str],
+        function: Callable[[int], float],
+        x_bounds: Tuple[int, int] = (-1, 1),
+        y_bounds: Tuple[int, int] = (-1, 1),
+        figsize: Tuple[int, int] = (12, 9),
+        linewidth: int = 2
+    ) -> None:
+
         self.title     = title
         self.function  = function
         self.x_bounds  = x_bounds
@@ -32,17 +44,17 @@ class Plot:
 
 
 
-    def plot_function(self):
+    def plot_function(self) -> None:
         plt.plot(self.x_range, self.function(self.x_range), 'b', linewidth = self.linewidth)
 
 
 
-    def plot_yequalsx(self):
+    def plot_yequalsx(self) -> None:
         plt.plot(self.x_range, self.x_range, 'g', linewidth = self.linewidth)
 
 
 
-    def plot_cobweb(self, x0, steps):
+    def plot_cobweb(self, x0: float, steps: int) -> None:
         x_points = np.zeros((2 * steps) + 1)
         y_points = np.zeros((2 * steps) + 1)
 
@@ -66,11 +78,11 @@ class Plot:
 
 
 
-    def plot_show(self):
+    def plot_show(self) -> None:
         plt.show()
 
 
 
-    def plot_save(self, file):
+    def plot_save(self, file: str) -> None:
         plt.savefig(file, format = 'png')
         plt.close()
