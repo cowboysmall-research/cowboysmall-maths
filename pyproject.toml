@@ -39,6 +39,8 @@ dependencies = [
   "openpyxl",
 
   "ipykernel",
+  "jupyter",
+
   "pyasyncore",
   "pyasynchat",
 ]
