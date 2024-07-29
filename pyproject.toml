@@ -30,7 +30,17 @@ classifiers = [
 ]
 dependencies = [
   "numpy",
+  "pandas",
+  # "scipy>=1.6.1,<=1.11.4",
+  "scipy",
   "matplotlib",
+  "seaborn",
+  "plotly",
+  "openpyxl",
+
+  "ipykernel",
+  "pyasyncore",
+  "pyasynchat",
 ]
 
 
