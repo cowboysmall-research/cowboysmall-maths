@@ -7,6 +7,11 @@ from scipy.special import perm
 
 
 
+# %% 1 -
+plt.style.use("ggplot")
+
+
+
 # %% 1 - 
 def function(n):
     return 1 - np.exp(np.log(perm(365, n)) - n * np.log(365))

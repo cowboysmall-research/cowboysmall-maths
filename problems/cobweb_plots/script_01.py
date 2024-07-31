@@ -7,6 +7,11 @@ from cowboysmall.maths.plots.cobweb import cobweb_points
 
 
 
+# %% 1 -
+plt.style.use("ggplot")
+
+
+
 # %% 1 - 
 def function(x):
     return x / (1 + x)

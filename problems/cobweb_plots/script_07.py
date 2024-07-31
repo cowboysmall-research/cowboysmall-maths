@@ -7,30 +7,35 @@ from cowboysmall.maths.plots.cobweb import cobweb_points
 
 
 
+# %% 1 -
+plt.style.use("ggplot")
+
+
+
 # %% 1 - 
 def function(x):
-    return x * 2.75 * (1 - x)
+    return x * np.log(x**2)
 
 
 
 # %% 2 - 
-ax = (-0.5, 1.5)
-ay = (-0.5, 1.0)
+ax = (-1, 3)
+ay = (-1, 3)
 
 
 
-# %% 3 - 
+# %% 2 - 
 x = np.arange(*ax, 0.01)
 y = function(x)
 
 
 
-# %% 4 - 
+# %% 3 - 
 c, d = cobweb_points(function, 0.1, 20)
 
 
 
-# %% 5 - 
+# %% 4 - 
 plt.figure(figsize = (12, 9))
 plt.title("Cobweb Plot")
 plt.xlabel("$x_n$")
