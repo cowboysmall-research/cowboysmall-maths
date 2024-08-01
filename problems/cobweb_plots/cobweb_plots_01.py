@@ -52,3 +52,6 @@ plt.axhline(y = 0, color = 'k')
 plt.axvline(x = 0, color = 'k')
 
 plt.show()
+
+# plt.savefig("./images/cobweb_plots/cobweb_plots_01.png", format = 'png')
+# plt.close()
