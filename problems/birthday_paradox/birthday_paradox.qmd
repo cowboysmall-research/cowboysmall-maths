@@ -43,7 +43,7 @@ that two or more people share a birthday $P(E') \ge 0.5$ or $P(E') \ge 50\%$.
 ![Probability that at least two people share a birthday](../../images/birthday_paradox/birthday_paradox_01.png){width=75%}
 
 
-# Solution 2
+# Approach 2
 
 Another approach is to consider the number of pairs there are among $r$ people:
 
