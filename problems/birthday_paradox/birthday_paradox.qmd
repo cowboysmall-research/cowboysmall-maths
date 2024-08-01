@@ -1,0 +1,83 @@
+---
+title: "The Birthday Paradox"
+author: "Jerry Kiely"
+format:
+  pdf:
+    toc: false
+    number-sections: false
+    colorlinks: false
+---
+
+
+# Statement 
+
+From Wikipedia:
+
+> In probability theory, the birthday problem asks for the probability that, in a 
+> set of n randomly chosen people, at least two will share a birthday. The birthday 
+> paradox refers to the counterintuitive fact that only 23 people are needed for 
+> that probability to exceed 50%.
+
+# Approach 1
+
+Lets find a formula for the probability of no people from a group sharing the same 
+birthday, and then we find it's complement. Let $E$ be the event that no people 
+from a group of $r$ people share the same birthday, and let $P(E)$ be the event's 
+probability:
+
+$$
+P(E) = \frac{ {}^{365}P_{r} }{ 365^r }
+$$
+
+The complement of $P(E)$ is the probability that at least two people share a 
+birthday:
+
+$$
+P(E') = 1 - \frac{ {}^{365}P_{r} }{ 365^r }
+$$
+
+From inspection of the below plot we can see that when $r = 23$ the probability 
+$P(E') \ge 0.5$. This means that in a group of 23 (or more) people the probability 
+that two or more people share a birthday $P(E') \ge 0.5$ or $P(E') \ge 50\%$.
+
+![Probability that at least two people share a birthday](../../images/birthday_paradox/birthday_paradox_01.png){width=75%}
+
+
+# Solution 2
+
+Another approach is to consider the number of pairs there are among $r$ people:
+
+$$
+n = {}^{r}C_{2}
+$$
+
+The probability that each person in a pair has a different birthday is:
+
+$$
+P(B') = \frac{364}{365}
+$$
+
+as the first person has $365$ choices (out of $365$ days) for their borthday, and if 
+there is to be no shared birthday the second person would have $364$ choices (out of 
+$365$ days) for their birthday. The probability that for all pairs, each person has 
+a different birthday: 
+
+$$
+P(E) = \left( \frac{364}{365} \right)^n
+$$
+
+as there are $n$ pairs from above. Hence the probability that at least one pair 
+people share a birthday is the complement of the above probability:
+
+$$
+P(E') = 1 - \left( \frac{364}{365} \right)^n
+$$
+
+From inspection of the below plot we can see that the probability $P(E') \ge 0.5$ 
+for $n = 253$ which happens to be ${}^{23}C_{2}$. So for a group of 23 people, the 
+probability of finding a shared birthday among the group is $\ge 50%$. 
+
+![Probability that at least one pair of people share a birthday](../../images/birthday_paradox/birthday_paradox_02.png){width=75%}
+
+
+
