@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from scipy.special import perm
+from scipy.special import comb
 
 
 
@@ -14,12 +14,12 @@ plt.style.use("ggplot")
 
 # %% 1 - 
 def function(n):
-    return 1 - np.exp(n * (np.log(364) - np.log(365)))
+    return 1 - np.exp(comb(n, 2) * (np.log(364) - np.log(365)))
 
 
 
 # %% 2 - 
-x = np.arange(0, 366, 1)
+x = np.arange(0, 51, 1)
 y = function(x)
 
 
@@ -32,7 +32,7 @@ p = round(y[n], 2)
 
 # %% 4 - 
 plt.figure(figsize = (12, 9))
-plt.title("Birthmate")
+plt.title("Probability of Pairs of Shared Birthdays")
 plt.xlabel("$n$")
 plt.ylabel("$P(n)$")
 

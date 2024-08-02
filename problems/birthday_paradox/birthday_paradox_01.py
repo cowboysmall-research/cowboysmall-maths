@@ -32,7 +32,7 @@ p = round(y[n], 2)
 
 # %% 4 - 
 plt.figure(figsize = (12, 9))
-plt.title("Birthday Paradox")
+plt.title("Probability of Shared Birthdays")
 plt.xlabel("$n$")
 plt.ylabel("$P(n)$")
 
