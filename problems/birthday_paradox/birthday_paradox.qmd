@@ -114,8 +114,9 @@ $$
 
 as the first person has $365$ choices (out of $365$ days) for their birthday, and if 
 there is to be no shared birthday the second person would have $364$ choices (out of 
-$365$ days) for their birthday. The probability that for all pairs, each person has 
-a different birthday: 
+$365$ days) for their birthday. 
+
+The probability that for all pairs, each person has a different birthday: 
 
 \vspace{1em}
 
