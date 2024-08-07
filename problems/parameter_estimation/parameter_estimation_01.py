@@ -9,31 +9,45 @@ import torch.optim as optim
 
 
 
+# %% 0 - 
+plt.style.use("ggplot")
+
+
+
+# %% 0 - 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+print(device)
+
+
+
 # %% 1 - Generate training data
 a = 0.5
 
-t = np.linspace(0, 5, 100)
+t = np.linspace(0, 10, 200)
 y = np.exp(a * t)
 
 
 
 # %% 2 - Simulate observations with jitter
-observed_y = y + 0.1 * np.random.randn(len(t))
-print(observed_y.shape)
+y_observed = y + 0.5 * np.random.randn(len(t))
 
 
 
 # %% 2 - 
-t_tensor = torch.from_numpy(t).type(torch.Tensor).view(-1, 1)
-y_tensor = torch.from_numpy(observed_y).type(torch.Tensor).view(-1, 1)
+T = torch.from_numpy(t).type(torch.Tensor).view(-1, 1)
+Y = torch.from_numpy(y_observed).type(torch.Tensor).view(-1, 1)
+
+if torch.cuda.is_available():
+    T = T.cuda()
+    Y = Y.cuda()
 
 
 
 # %% 2 - Define a neural network to approximate 'a'
-class SolutionEstimationNN(nn.Module):
+class FirstOrderODE(nn.Module):
 
     def __init__(self):
-        super(SolutionEstimationNN, self).__init__()
+        super(FirstOrderODE, self).__init__()
         self.a = nn.Sequential(
             nn.Linear(1, 10),
             nn.ReLU(),
@@ -50,43 +64,52 @@ class SolutionEstimationNN(nn.Module):
 
 
 # %% 3 - Create an instance of the neural network
-model     = SolutionEstimationNN()
+model     = FirstOrderODE()
+model     = model.to(device)
+
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr = 0.01)
+optimizer = optim.Adam(model.parameters(), lr = 0.001)
 
 
 
 # %% 4 - 
-for epoch in range(1000):
-    # Forward pass
-    estimated_y = model(t_tensor)
+epochs = 1000
+for epoch in range(epochs):
+    out  = model(T)
+    loss = criterion(out, Y)
 
-    # Compute the loss
-    loss = criterion(estimated_y, y_tensor)
-
-    # Backpropagation and optimization
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
 
+    if epoch % 10 == 9:
+        print(f"Epoch {epoch + 1:>5} - MSE: {loss.item()}")
+
 
 
 # %% 0 - Extract the estimated 'a'
-estimated_y = model(t_tensor).detach().numpy()
-estimated_a = model.a(t_tensor).detach().numpy()
+y_estimate = model(T).detach().numpy()
+a_estimate = model.a(T).detach().numpy()
 
 
 
 # %% 0 - 
-plt.plot(t, observed_y, label = 'Observed y')
-plt.plot(t, estimated_y, label = 'Estimated y')
-plt.plot(t, y, label = 'Actual y')
+fig, axes = plt.subplots(1, 2, figsize = (16, 6))
+fig.suptitle("ODE Estimation")
 
-plt.plot(t, estimated_a, label = 'Estimated a')
-plt.axhline(a, label = 'Actual a')
+axes[0].set_title("Function")
+axes[0].plot(t, y_observed, label = 'Observed y')
+axes[0].plot(t, y_estimate, label = 'Estimated y')
+axes[0].plot(t, y, label = 'Actual y')
+axes[0].legend(loc = 'lower right')
+axes[0].set_xlabel("t")
+axes[0].set_ylabel("y")
 
-plt.xlabel('')
-plt.ylabel('a')
+axes[1].set_title("Parameter")
+axes[1].axhline(a, label = 'Actual a')
+axes[1].plot(t, a_estimate, label = 'Estimated a')
+axes[1].legend(loc = 'lower right')
+axes[1].set_xlabel("t")
+axes[1].set_ylabel("a")
 
-plt.legend()
-plt.show()
+# %%
