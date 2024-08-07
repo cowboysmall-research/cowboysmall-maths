@@ -1,53 +1,68 @@
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
+# %% 0 - import libraries
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-# Generate training data
-true_a = 0.5  # True value of parameter 'a'
-
-t = np.linspace(0, 5, 100)  # Time points from 0 to 5
-y = np.exp(true_a * t) +np.random.randn(len(t))  # True solution of dy/dt = ay
-
-# Convert NumPy arrays to PyTorch tensors
-t_tensor = torch.tensor(t, dtype=torch.float32).view(-1, 1)
-y_tensor = torch.tensor(y, dtype=torch.float32).view(-1, 1)
+import torch
+import torch.nn as nn
+import torch.optim as optim
 
 
 
-# Define a neural network to approximate 'a'
-class ParameterEstimationNN(nn.Module):
+# %% 1 - Generate training data
+a = 0.5
+
+t = np.linspace(0, 5, 100)
+y = np.exp(a * t)
+
+
+
+# %% 2 - Simulate observations with jitter
+observed_y = y + 0.1 * np.random.randn(len(t))
+print(observed_y.shape)
+
+
+
+# %% 2 - 
+t_tensor = torch.from_numpy(t).type(torch.Tensor).view(-1, 1)
+y_tensor = torch.from_numpy(observed_y).type(torch.Tensor).view(-1, 1)
+
+
+
+# %% 2 - Define a neural network to approximate 'a'
+class SolutionEstimationNN(nn.Module):
+
     def __init__(self):
-        super(ParameterEstimationNN, self).__init__()
-        self.fc1 = nn.Linear(1, 10)
-        self.fc2 = nn.Linear(10, 1)
+        super(SolutionEstimationNN, self).__init__()
+        self.a = nn.Sequential(
+            nn.Linear(1, 10),
+            nn.ReLU(),
+            nn.Linear(10, 100),
+            nn.ReLU(),
+            nn.Linear(100, 10),
+            nn.ReLU(),
+            nn.Linear(10, 1)
+        )
 
-    def forward(self, x):
-        x = torch.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
+    def forward(self, t):
+        return torch.exp(torch.mul(self.a(t), t))
 
 
 
-# Create an instance of the neural network
-model = ParameterEstimationNN()
-# Define the loss function and optimizer
+# %% 3 - Create an instance of the neural network
+model     = SolutionEstimationNN()
 criterion = nn.MSELoss()
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr = 0.01)
 
 
-A=[]
-# Training the model to estimate 'a'
+
+# %% 4 - 
 for epoch in range(1000):
     # Forward pass
-    estimated_a = model(t_tensor)
-    A.append(estimated_a.detach().numpy()[0, 0])
+    estimated_y = model(t_tensor)
+
     # Compute the loss
-    loss = criterion(estimated_a, true_a * torch.ones_like(estimated_a))
+    loss = criterion(estimated_y, y_tensor)
 
     # Backpropagation and optimization
     optimizer.zero_grad()
@@ -56,22 +71,22 @@ for epoch in range(1000):
 
 
 
-# Extract the estimated 'a'
-estimated_a = model(t_tensor).detach().numpy()[0, 0]
+# %% 0 - Extract the estimated 'a'
+estimated_y = model(t_tensor).detach().numpy()
+estimated_a = model.a(t_tensor).detach().numpy()
 
 
 
-# Print the estimated 'a'
-print(f"Estimated 'a': {estimated_a}")
-# Print the true 'a'
-print(f"True 'a': {true_a}")
+# %% 0 - 
+plt.plot(t, observed_y, label = 'Observed y')
+plt.plot(t, estimated_y, label = 'Estimated y')
+plt.plot(t, y, label = 'Actual y')
 
+plt.plot(t, estimated_a, label = 'Estimated a')
+plt.axhline(a, label = 'Actual a')
 
-
-plt.plot(A,'ro:',label='Estimates of a')
-plt.axhline(true_a,label='True a')
-plt.legend()
-plt.xlabel('Epochs')
+plt.xlabel('')
 plt.ylabel('a')
-plt.show()
 
+plt.legend()
+plt.show()
