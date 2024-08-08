@@ -32,9 +32,10 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # %% 1 - Generate training data
 a = 0.5
+C = 2
 
 t = np.linspace(0, 5, 100)
-y = np.exp(a * t)
+y = C * np.exp(a * t)
 
 
 
@@ -67,9 +68,18 @@ class FirstOrderODE(nn.Module):
             nn.ReLU(),
             nn.Linear(10, 1)
         )
+        self.C = nn.Sequential(
+            nn.Linear(1, 10),
+            nn.ReLU(),
+            nn.Linear(10, 10),
+            nn.ReLU(),
+            nn.Linear(10, 10),
+            nn.ReLU(),
+            nn.Linear(10, 1)
+        )
 
     def forward(self, t):
-        return torch.exp(torch.mul(self.a(t), t))
+        return torch.mul(self.C(t), torch.exp(torch.mul(self.a(t), t)))
 
 
 
@@ -101,14 +111,15 @@ for epoch in range(epochs):
 # %% 7 - Get the estimates
 y_estimate = model(T).detach().cpu().numpy()
 a_estimate = model.a(T).detach().cpu().numpy()
+C_estimate = model.C(T).detach().cpu().numpy()
 
 
 
 # %% 8 - Plot the estimates
-fig, axes = plt.subplots(1, 2, figsize = (18, 6))
+fig, axes = plt.subplots(1, 3, figsize = (18, 6))
 fig.suptitle("ODE Estimation")
 
-axes[0].set_title("Function")
+axes[0].set_title("Equation")
 axes[0].plot(t, y, "red", label = 'Actual y')
 axes[0].plot(t, y_observed, "gray", label = 'Observed y')
 axes[0].plot(t, y_estimate, "green", label = 'Estimated y')
@@ -116,11 +127,18 @@ axes[0].legend(loc = 'upper left')
 axes[0].set_xlabel("t")
 axes[0].set_ylabel("y")
 
-axes[1].set_title("Parameter")
+axes[1].set_title("a")
 axes[1].axhline(a, label = 'Actual a')
 axes[1].plot(a_estimate, 'green', label = 'Estimated a')
 axes[1].legend(loc = 'upper right')
 axes[1].set_xlabel("t")
 axes[1].set_ylabel("a")
+
+axes[2].set_title("C")
+axes[2].axhline(C, label = 'Actual C')
+axes[2].plot(C_estimate, 'green', label = 'Estimated C')
+axes[2].legend(loc = 'upper right')
+axes[2].set_xlabel("t")
+axes[2].set_ylabel("C")
 
 plt.show()
