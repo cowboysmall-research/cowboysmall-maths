@@ -3,11 +3,9 @@
 import numpy as np
 
 
-
 # %% 1 -
 def accumulation_years(i, a):
-    # return np.ceil(np.log(a) / np.log(1 + i))
-    return np.log(a) / np.log(1 + i)
+    return np.ceil(np.log(a) / np.log(1 + i))
 
 
 # %% 2 -
